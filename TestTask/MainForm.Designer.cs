@@ -32,13 +32,15 @@ namespace TestTask
             LoadFiles = new Button();
             openFilesDialog = new OpenFileDialog();
             GenerateReport = new Button();
+            SelectDirButton = new Button();
+            saveResultFileDialog = new SaveFileDialog();
             SuspendLayout();
             // 
             // LoadFiles
             // 
             LoadFiles.Location = new Point(12, 441);
             LoadFiles.Name = "LoadFiles";
-            LoadFiles.Size = new Size(125, 23);
+            LoadFiles.Size = new Size(135, 23);
             LoadFiles.TabIndex = 0;
             LoadFiles.Text = "Загрузить файлы";
             LoadFiles.UseVisualStyleBackColor = true;
@@ -57,17 +59,30 @@ namespace TestTask
             GenerateReport.TabIndex = 1;
             GenerateReport.Text = "Сформировать отчёт";
             GenerateReport.UseVisualStyleBackColor = true;
+            GenerateReport.EnabledChanged += GenerateReport_EnabledChanged;
             GenerateReport.Click += GenerateReport_Click;
+            // 
+            // SelectDirButton
+            // 
+            SelectDirButton.Location = new Point(12, 412);
+            SelectDirButton.Name = "SelectDirButton";
+            SelectDirButton.Size = new Size(135, 23);
+            SelectDirButton.TabIndex = 2;
+            SelectDirButton.Text = "Указать директорию";
+            SelectDirButton.UseVisualStyleBackColor = true;
+            SelectDirButton.Click += SelectDirButton_Click;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(468, 476);
+            Controls.Add(SelectDirButton);
             Controls.Add(GenerateReport);
             Controls.Add(LoadFiles);
             Name = "MainForm";
             Text = "MainForm";
+            Load += MainForm_Load;
             ResumeLayout(false);
         }
 
@@ -79,5 +94,7 @@ namespace TestTask
         private Button GenerateReport;
         private Button LoadFiles;
         private OpenFileDialog openFilesDialog;
+        private Button SelectDirButton;
+        private SaveFileDialog saveResultFileDialog;
     }
 }

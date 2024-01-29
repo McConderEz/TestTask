@@ -19,6 +19,7 @@ namespace TestTask.Controller
         /// <param name="paths"></param>
         public List<Card> LoadCards(string path)
         {           
+            //TODO:Сделать проверки
             XmlSerializer serializer = new XmlSerializer(typeof(List<Card>), new XmlRootAttribute("Cards"));
             List<Card> cards;
             using (var fs = new FileStream(path, FileMode.Open))
@@ -42,6 +43,7 @@ namespace TestTask.Controller
         /// <param name="paths"></param>
         public List<User> LoadUsers(string path)
         {
+            //TODO:Сделать проверки
             List<User> users = new List<User>();
             using (var sr = new StreamReader(path))
             {

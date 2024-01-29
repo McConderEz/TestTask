@@ -16,8 +16,6 @@ namespace TestTask.Model
         public string Pan { get; set; }
         [XmlElement("ExpDate")]
         public string ExpDate { get; set; }
-        //[XmlArray("Cards"),XmlArrayItem("Card")]
-        //public List<Card> Cards { get; set; }
 
 
         public Card(int userId, string pan, string expDate)

@@ -13,14 +13,14 @@ namespace TestTask.Controller
         public List<string> Paths;
         public List<User> Users;
         public List<Card> Cards;
-        public List<Record> Records;
+        public RecordList RecordList;
 
         public ReportController()
         {
             Paths = new List<string>();
             Users = new List<User>();
             Cards = new List<Card>();
-            Records = new List<Record>();
+            RecordList = new RecordList();
         }
 
 
@@ -33,18 +33,19 @@ namespace TestTask.Controller
         {
             GetUsers();
             GetCards();
+            Paths.Clear();
         }
 
-        public void GetUsers()
+        private void GetUsers()
         {
             var filePaths = Paths.Where(path => Path.GetExtension(path) == ".csv");
             foreach(var path in filePaths)
             {
                 Users.AddRange(LoadUsers(path));
-            }
+            }            
         }
 
-        public void GetCards()
+        private void GetCards()
         {
             var filePaths = Paths.Where(path => Path.GetExtension(path).Equals(".xml"));
             foreach(var path in filePaths)
@@ -53,11 +54,13 @@ namespace TestTask.Controller
             }
         }
 
-        public void GenerateReport()
-        {
+        public void GenerateReport(string path)
+        {            
             SearchingData();
-            Save();
+            Save(path);
         }
+        //TODO:Сделать, чтобы данные не дублировались при добавлении новых файлов в директорию.
+        //TODO:Сделать уведомление при возможности сформировать отчёт
 
         private void SearchingData()
         {
@@ -66,10 +69,10 @@ namespace TestTask.Controller
                 foreach (var card in Cards)
                 {
                     foreach (var user in Users)
-                    {
+                    {                      
                         if (card.UserId == user.UserId)
                         {
-                            Records.Add(new Record
+                            RecordList.Records.Add(new Record
                             {
                                 UserId = user.UserId,
                                 Pan = card.Pan,
@@ -80,19 +83,18 @@ namespace TestTask.Controller
                             });
                             break;
                         }
-                    }
+                    }                   
                 }
                 break;
             }
         }
 
-        public void Save()
+        public void Save(string path)
         {
-            if(Records.Count > 0)
+            if(RecordList.Records.Count > 0)
             {
-                RecordList recordList = new RecordList();
-                recordList.Records.AddRange(Records);
-                Save(recordList, "test.json");
+                Save(RecordList, path);
+                RecordList.Records.Clear();
             }
         }
     }

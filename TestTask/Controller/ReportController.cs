@@ -37,7 +37,7 @@ namespace TestTask.Controller
 
         public void GetUsers()
         {
-            var filePaths = Paths.Where(path => Path.GetExtension(path) == "csv");
+            var filePaths = Paths.Where(path => Path.GetExtension(path) == ".csv");
             foreach(var path in filePaths)
             {
                 Users.AddRange(LoadUsers(path));
@@ -46,7 +46,7 @@ namespace TestTask.Controller
 
         public void GetCards()
         {
-            var filePaths = Paths.Where(path => Path.GetExtension(path) == "xml");
+            var filePaths = Paths.Where(path => Path.GetExtension(path).Equals(".xml"));
             foreach(var path in filePaths)
             {
                 Cards.AddRange(LoadCards(path));
@@ -55,7 +55,45 @@ namespace TestTask.Controller
 
         public void GenerateReport()
         {
-           
+            SearchingData();
+            Save();
+        }
+
+        private void SearchingData()
+        {
+            while (Users.Count > 0 && Cards.Count > 0)
+            {
+                foreach (var card in Cards)
+                {
+                    foreach (var user in Users)
+                    {
+                        if (card.UserId == user.UserId)
+                        {
+                            Records.Add(new Record
+                            {
+                                UserId = user.UserId,
+                                Pan = card.Pan,
+                                Phone = user.Number,
+                                FirstName = user.Name,
+                                LastName = user.Name,
+                                ExpDate = card.ExpDate,
+                            });
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        public void Save()
+        {
+            if(Records.Count > 0)
+            {
+                RecordList recordList = new RecordList();
+                recordList.Records.AddRange(Records);
+                Save(recordList, "test.json");
+            }
         }
     }
 }

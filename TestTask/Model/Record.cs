@@ -33,6 +33,8 @@ namespace TestTask.Model
 
         }
 
+        
+        public Record() { }
 
     } 
 }

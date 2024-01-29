@@ -15,23 +15,22 @@ namespace TestTask
         private void LoadFiles_Click(object sender, EventArgs e)
         {
             var openFilesDialog = new OpenFileDialog();
-            openFilesDialog.Filter = "XML Files (*.xml)|*.xml|CSV Files (*.csv)|*.csv";
+            openFilesDialog.Filter = "XML and CSV Files (*.xml;*.csv)|*.xml;*.csv";
+            openFilesDialog.Multiselect = true;
 
             if (openFilesDialog.ShowDialog() == DialogResult.OK)
             {
                 string[] filePaths = openFilesDialog.FileNames;
-                controller.Add(filePaths);//TODO:Создать еще один контроллер
+                controller.Add(filePaths);
+                controller.GetCards();
+                controller.GetUsers();
             }
         }
 
         private void GenerateReport_Click(object sender, EventArgs e)
         {
-
+            controller.GenerateReport();
         }
-
-        //TODO: Для парсинга даты в строковый формат использовать метод расширения
-        //Для ожидания и формирования отчёта при совпадении данных попробовать семафор 
-        //Для парсинга частей данных из xml и csv использовать частичные классы
 
     }
 }

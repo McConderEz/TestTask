@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -17,19 +18,19 @@ namespace TestTask.Controller
         /// </summary>
         /// <param name="paths"></param>
         public List<Card> LoadCards(string path)
-        {
-            var xmlFormatter = new XmlSerializer(typeof(List<Card>));
-            List<Card> cards = new List<Card>();
+        {           
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Card>), new XmlRootAttribute("Cards"));
+            List<Card> cards;
             using (var fs = new FileStream(path, FileMode.Open))
             {
                 if (fs.Length > 0)
                 {
-                    cards = xmlFormatter.Deserialize(fs) as List<Card>;
+                    cards = serializer.Deserialize(fs) as List<Card>;
                 }
                 else
                 {
                     return null;
-                }               
+                }
             }
 
             return cards;
@@ -69,14 +70,18 @@ namespace TestTask.Controller
         /// </summary>
         /// <param name="items"></param>
         /// <param name="fileName"></param>
-        public void Save(List<Record> items,string fileName)
+        public void Save(RecordList items,string fileName)
         {
             //TODO: Сделать проверки
             using(var fs = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                var option = new JsonSerializerOptions { WriteIndented = true };
+                var option = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                };
                 
-                JsonSerializer.Serialize(fs,option);
+                JsonSerializer.Serialize(fs, items, option);
             }
         }
     }

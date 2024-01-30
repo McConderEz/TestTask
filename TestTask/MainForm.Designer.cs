@@ -29,33 +29,18 @@ namespace TestTask
         /// </summary>
         private void InitializeComponent()
         {
-            LoadFiles = new Button();
             openFilesDialog = new OpenFileDialog();
             GenerateReport = new Button();
             SelectDirButton = new Button();
             saveResultFileDialog = new SaveFileDialog();
+            resFilePathButton = new Button();
             SuspendLayout();
-            // 
-            // LoadFiles
-            // 
-            LoadFiles.Location = new Point(12, 441);
-            LoadFiles.Name = "LoadFiles";
-            LoadFiles.Size = new Size(135, 23);
-            LoadFiles.TabIndex = 0;
-            LoadFiles.Text = "Загрузить файлы";
-            LoadFiles.UseVisualStyleBackColor = true;
-            LoadFiles.Click += LoadFiles_Click;
-            // 
-            // openFilesDialog
-            // 
-            openFilesDialog.FileName = "openFileDialog1";
-            openFilesDialog.Multiselect = true;
             // 
             // GenerateReport
             // 
-            GenerateReport.Location = new Point(318, 441);
+            GenerateReport.Location = new Point(269, 441);
             GenerateReport.Name = "GenerateReport";
-            GenerateReport.Size = new Size(138, 23);
+            GenerateReport.Size = new Size(187, 23);
             GenerateReport.TabIndex = 1;
             GenerateReport.Text = "Сформировать отчёт";
             GenerateReport.UseVisualStyleBackColor = true;
@@ -64,22 +49,32 @@ namespace TestTask
             // 
             // SelectDirButton
             // 
-            SelectDirButton.Location = new Point(12, 412);
+            SelectDirButton.Location = new Point(12, 441);
             SelectDirButton.Name = "SelectDirButton";
-            SelectDirButton.Size = new Size(135, 23);
+            SelectDirButton.Size = new Size(205, 23);
             SelectDirButton.TabIndex = 2;
-            SelectDirButton.Text = "Указать директорию";
+            SelectDirButton.Text = "Указать директорию для загрузки";
             SelectDirButton.UseVisualStyleBackColor = true;
             SelectDirButton.Click += SelectDirButton_Click;
+            // 
+            // resFilePathButton
+            // 
+            resFilePathButton.Location = new Point(269, 402);
+            resFilePathButton.Name = "resFilePathButton";
+            resFilePathButton.Size = new Size(187, 23);
+            resFilePathButton.TabIndex = 3;
+            resFilePathButton.Text = "Указать путь выходного файла";
+            resFilePathButton.UseVisualStyleBackColor = true;
+            resFilePathButton.Click += resFilePathButton_Click;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(468, 476);
+            Controls.Add(resFilePathButton);
             Controls.Add(SelectDirButton);
             Controls.Add(GenerateReport);
-            Controls.Add(LoadFiles);
             Name = "MainForm";
             Text = "MainForm";
             Load += MainForm_Load;
@@ -96,5 +91,7 @@ namespace TestTask
         private OpenFileDialog openFilesDialog;
         private Button SelectDirButton;
         private SaveFileDialog saveResultFileDialog;
+        private Button button1;
+        private Button resFilePathButton;
     }
 }

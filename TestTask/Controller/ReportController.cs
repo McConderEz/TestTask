@@ -41,7 +41,14 @@ namespace TestTask.Controller
             var filePaths = Paths.Where(path => Path.GetExtension(path) == ".csv");
             foreach(var path in filePaths)
             {
-                Users.AddRange(LoadUsers(path));
+                var loadedUsers = LoadUsers(path);
+                foreach(var user in loadedUsers)
+                {
+                    if(!Users.Any(exUser => exUser.UserId == user.UserId))
+                    {
+                        Users.Add(user);
+                    }
+                }
             }            
         }
 
@@ -50,7 +57,15 @@ namespace TestTask.Controller
             var filePaths = Paths.Where(path => Path.GetExtension(path).Equals(".xml"));
             foreach(var path in filePaths)
             {
-                Cards.AddRange(LoadCards(path));
+                var loadedCards = LoadCards(path);
+                foreach(var card in loadedCards)
+                {
+                    if (!Cards.Any(exCard => exCard.UserId == card.UserId))
+                    {
+                        Cards.Add(card);
+                    }
+                }
+                
             }
         }
 
@@ -87,6 +102,8 @@ namespace TestTask.Controller
                 }
                 break;
             }
+            Users.RemoveAll(user => RecordList.Records.Any(record => record.UserId == user.UserId));
+            Cards.RemoveAll(card => RecordList.Records.Any(record => record.UserId == card.UserId));
         }
 
         public void Save(string path)

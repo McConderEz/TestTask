@@ -7,39 +7,34 @@ namespace TestTask
     {
         readonly ReportController controller;
         string dirPath = "";
+        string resultFilePath = "";
         public MainForm()
         {
             InitializeComponent();
             controller = new ReportController();
         }
 
-        private void LoadFiles_Click(object sender, EventArgs e)
-        {
-            using (var openFilesDialog = new OpenFileDialog())
-            {
-                openFilesDialog.Filter = "XML and CSV Files (*.xml;*.csv)|*.xml;*.csv";
-                openFilesDialog.Multiselect = true;
-                if (openFilesDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string[] filePaths = openFilesDialog.FileNames;
-                    controller.Add(filePaths);
-                    controller.GetData();
-                }
-            }
-        }
+        //private void LoadFiles_Click(object sender, EventArgs e)
+        //{
+        //    using (var openFilesDialog = new OpenFileDialog())
+        //    {
+        //        openFilesDialog.Filter = "XML and CSV Files (*.xml;*.csv)|*.xml;*.csv";
+        //        openFilesDialog.Multiselect = true;
+        //        if (openFilesDialog.ShowDialog() == DialogResult.OK)
+        //        {
+        //            string[] filePaths = openFilesDialog.FileNames;
+        //            controller.Add(filePaths);
+        //            controller.GetData();
+        //        }
+        //    }
+        //}
 
         private void GenerateReport_Click(object sender, EventArgs e)
         {
             SearchingFiles(dirPath);
-            using (var saveResultFileDiaglog = new SaveFileDialog())
+            if(!string.IsNullOrWhiteSpace(resultFilePath))
             {
-                saveResultFileDiaglog.DefaultExt = "json";
-                saveResultFileDiaglog.Filter = "JSON Files (*.json)|*.json";
-                var result = saveResultFileDiaglog.ShowDialog();
-                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(saveResultFileDiaglog.FileName))
-                {
-                    controller.GenerateReport(saveResultFileDiaglog.FileName);
-                }
+                controller.GenerateReport(resultFilePath);
             }
         }
 
@@ -55,7 +50,7 @@ namespace TestTask
 
         private void SelectDirButton_Click(object sender, EventArgs e)
         {
-            using(var dialog = new FolderBrowserDialog())
+            using (var dialog = new FolderBrowserDialog())
             {
                 var result = dialog.ShowDialog();
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
@@ -73,6 +68,20 @@ namespace TestTask
 
             controller.Add(filePaths);
             controller.GetData();
+        }
+
+        private void resFilePathButton_Click(object sender, EventArgs e)
+        {
+            using (var saveResultFileDiaglog = new SaveFileDialog())
+            {
+                saveResultFileDiaglog.DefaultExt = "json";
+                saveResultFileDiaglog.Filter = "JSON Files (*.json)|*.json";
+                var result = saveResultFileDiaglog.ShowDialog();
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(saveResultFileDiaglog.FileName))
+                {
+                    resultFilePath = saveResultFileDiaglog.FileName;
+                }
+            }
         }
     }
 }

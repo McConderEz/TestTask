@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -11,15 +12,21 @@ namespace TestTask.Model
     [DataContract]
     public class Record
     {
+        [JsonProperty("UserId")]
         public int UserId { get; set; }
+        [JsonProperty("Pan")]
         public string Pan { get; set; }
+        [JsonProperty("ExpDate")]
         public string ExpDate { get; set; }
+        [JsonProperty("FirstName")]
         public string FirstName { get; set; }
+        [JsonProperty("LastName")]
         public string LastName { get; set; }
+        [JsonProperty("Phone")]
         public string Phone { get; set; }
 
 
-        [JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
         public Record(int userId, string pan,string expDate, string firstName, string lastName, string phone)
         {
             //TODO:Сделать проверки

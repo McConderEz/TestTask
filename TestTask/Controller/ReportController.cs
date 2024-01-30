@@ -15,6 +15,8 @@ namespace TestTask.Controller
         public List<Card> Cards;
         public RecordList RecordList;
 
+        public event EventHandler ReportReady;
+
         public ReportController()
         {
             Paths = new List<string>();
@@ -70,14 +72,13 @@ namespace TestTask.Controller
         }
 
         public void GenerateReport(string path)
-        {            
-            SearchingData();
+        {
             Save(path);
         }
-        //TODO:Сделать, чтобы данные не дублировались при добавлении новых файлов в директорию.
+        //TODO:Сделать, чтобы старые данные не дублировались при добавлении новых файлов в директорию.
         //TODO:Сделать уведомление при возможности сформировать отчёт
 
-        private void SearchingData()
+        public void SearchingData()
         {
             while (Users.Count > 0 && Cards.Count > 0)
             {
@@ -96,6 +97,7 @@ namespace TestTask.Controller
                                 LastName = user.Name,
                                 ExpDate = card.ExpDate,
                             });
+                            ReportReady?.Invoke(this, EventArgs.Empty);
                             break;
                         }
                     }                   

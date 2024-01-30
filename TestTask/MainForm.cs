@@ -5,6 +5,7 @@ namespace TestTask
 {
     public partial class MainForm : Form
     {
+        private HashSet<string> processedFiles = new HashSet<string>();
         readonly ReportController controller;
         string dirPath = "";
         string resultFilePath = "";
@@ -12,6 +13,8 @@ namespace TestTask
         {
             InitializeComponent();
             controller = new ReportController();
+            controller.ReportReady += ControllerReportReadyHandler;
+            GenerateReport.Enabled = false;
         }
 
         //private void LoadFiles_Click(object sender, EventArgs e)
@@ -31,10 +34,14 @@ namespace TestTask
 
         private void GenerateReport_Click(object sender, EventArgs e)
         {
-            SearchingFiles(dirPath);
+                     
             if(!string.IsNullOrWhiteSpace(resultFilePath))
             {
-                controller.GenerateReport(resultFilePath);
+                Invoke((MethodInvoker)delegate
+                {
+                    controller.GenerateReport(resultFilePath);
+                    GenerateReport.Enabled = false;
+                });
             }
         }
 
@@ -48,7 +55,7 @@ namespace TestTask
 
         }
 
-        private void SelectDirButton_Click(object sender, EventArgs e)
+        private async void SelectDirButton_Click(object sender, EventArgs e)
         {
             using (var dialog = new FolderBrowserDialog())
             {
@@ -56,18 +63,40 @@ namespace TestTask
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
                     dirPath = dialog.SelectedPath;
+                    await SearchingFiles(dirPath);
                 }
             }
         }
 
-        private void SearchingFiles(string dirPath)
+        private async Task SearchingFiles(string dirPath)
         {
-            string[] files = Directory.GetFiles(dirPath);
+            while (true)
+            {
+                await Task.Run(() =>
+                {
+                    string[] files = Directory.GetFiles(dirPath);
 
-            string[] filePaths = Array.FindAll(files, file => file.ToLower().EndsWith(".xml") || file.ToLower().EndsWith(".csv"));
+                    string[] filePaths = Array.FindAll(files, file => file.ToLower().EndsWith(".xml") || file.ToLower().EndsWith(".csv"));
 
-            controller.Add(filePaths);
-            controller.GetData();
+                    List<string> newFiles = new List<string>();
+
+                    foreach(string filePath in filePaths)
+                    {
+                        if (!processedFiles.Contains(filePath))
+                        {
+                            newFiles.Add(filePath);
+                            processedFiles.Add(filePath);
+                        }
+                    }
+
+                    if (newFiles.Count > 0)
+                    {
+                        controller.Add(newFiles.ToArray());
+                        controller.GetData();
+                        controller.SearchingData();
+                    }
+                });
+            }
         }
 
         private void resFilePathButton_Click(object sender, EventArgs e)
@@ -82,6 +111,14 @@ namespace TestTask
                     resultFilePath = saveResultFileDiaglog.FileName;
                 }
             }
+        }
+
+        private void ControllerReportReadyHandler(object sender, EventArgs e)
+        {
+            Invoke((MethodInvoker)delegate
+            {
+                GenerateReport.Enabled = true;
+            });
         }
     }
 }
